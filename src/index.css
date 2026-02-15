@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@theme {
+  /* 温暖色调主题 */
+  --color-primary-50: #fdf8f5;
+  --color-primary-100: #f5ebe0;
+  --color-primary-200: #e8d5c4;
+  --color-primary-300: #d4b496;
+  --color-primary-400: #c09878;
+  --color-primary-500: #a67c52;
+  --color-primary-600: #8b6242;
+  --color-primary-700: #6b4a35;
+  --color-primary-800: #5a3d2e;
+  --color-primary-900: #4a3328;
+
+  /* 中性色 - 温暖灰 */
+  --color-warm-50: #faf9f7;
+  --color-warm-100: #f5f3ef;
+  --color-warm-200: #ebe6dd;
+  --color-warm-300: #d9d2c5;
+  --color-warm-400: #b8afa0;
+  --color-warm-500: #979081;
+  --color-warm-600: #7a7266;
+  --color-warm-700: #605a4e;
+  --color-warm-800: #4e483e;
+  --color-warm-900: #403a33;
+
+  /* 安全状态色 */
+  --color-safe-50: #f0fdf4;
+  --color-safe-100: #dcfce7;
+  --color-safe-500: #22c55e;
+  --color-safe-600: #16a34a;
+
+  /* 警告状态色 */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+
+  /* 危险状态色 */
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+}
+
+/* 基础样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  color: var(--color-warm-800);
+  background-color: var(--color-warm-50);
+  min-height: 100vh;
+}
+
+/* 移除输入框默认样式 */
+input, textarea, button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* 移除按钮默认样式 */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* 移除链接默认样式 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-warm-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-warm-400);
+}
+
+/* 动画基础类 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+.animate-slideUp { animation: slideUp 0.4s ease-out; }
+.animate-slideDown { animation: slideDown 0.4s ease-out; }
+
+/* 打字机效果 */
+@keyframes typing {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-typing { animation: typing 1.5s ease-in-out infinite; }
