@@ -3,6 +3,8 @@ import { MessageBubble, WelcomeBubble, type Message } from '@/components/chat/Me
 import { InputArea, EndChatButton } from '@/components/chat/InputArea';
 import { generateId } from '@/utils/helpers';
 import { navigate } from '@/router';
+import { aiService } from '@/services';
+import { useChatStore, useCrisisStore } from '@/stores';
 
 export default function ChatPage() {
   const isIntro = window.location.pathname === '/chat/intro';
@@ -79,19 +81,42 @@ export default function ChatPage() {
       // 设置打字状态
       setIsTyping(true);
 
-      // 模拟AI响应（实际项目中这里会调用API）
-      setTimeout(() => {
+      try {
+        // 获取AI响应
+        const response = await aiService.getResponse(content, {
+          messages: messages,
+          phase: useChatStore.getState().phase,
+          userName,
+          messageCount: messages.length,
+        });
+
         const aiMessage: Message = {
           id: generateId(),
           role: 'assistant',
-          content: generateAIResponse(content),
+          content: response.content,
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, aiMessage]);
+
+        // 如果AI返回了新阶段，更新状态
+        if (response.newPhase) {
+          useChatStore.getState().setPhase(response.newPhase);
+        }
+      } catch (error) {
+        console.error('获取AI响应失败:', error);
+        // 失败时显示错误消息
+        const errorMessage: Message = {
+          id: generateId(),
+          role: 'assistant',
+          content: '抱歉，我现在有点不在状态，请再说一次？',
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      } finally {
         setIsTyping(false);
-      }, 1500 + Math.random() * 1000);
+      }
     },
-    []
+    [messages, userName]
   );
 
   // 结束对话
@@ -149,36 +174,4 @@ export default function ChatPage() {
       </footer>
     </div>
   );
-}
-
-/**
- * 模拟AI响应（实际项目中替换为真实API调用）
- */
-function generateAIResponse(userMessage: string): string {
-  const lowerMessage = userMessage.toLowerCase();
-
-  // 简单关键词匹配
-  if (
-    lowerMessage.includes('焦虑') ||
-    lowerMessage.includes('紧张')
-  ) {
-    return '嗯，我听到你说自己有点焦虑。\n\n这种感觉确实不好受。\n\n能说说是什么让你感到焦虑吗？';
-  }
-
-  if (
-    lowerMessage.includes('难过') ||
-    lowerMessage.includes('伤心')
-  ) {
-    return '听起来你现在很难过。\n\n谢谢你愿意告诉我。\n\n如果想说的话，我在这里听着。';
-  }
-
-  if (
-    lowerMessage.includes('工作') ||
-    lowerMessage.includes('上班')
-  ) {
-    return '工作上的事情确实会让人很有压力。\n\n方便说说是什么让你感到困扰吗？';
-  }
-
-  // 默认回应
-  return '嗯，我听到了。\n\n谢谢你愿意分享这些。\n\n你继续说，我在这里陪着你。';
 }
