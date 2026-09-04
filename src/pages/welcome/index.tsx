@@ -7,6 +7,7 @@ import { navigate } from '@/router';
 
 export default function WelcomePage() {
   const [showConsent, setShowConsent] = useState(false);
+  const [consentAgreed, setConsentAgreed] = useState(false);
   const [userName, setUserName] = useState('');
   const [isEntering, setIsEntering] = useState(false);
 
@@ -20,6 +21,11 @@ export default function WelcomePage() {
     setTimeout(() => {
       navigate('/chat/intro');
     }, 800);
+  };
+
+  const handleConsentAgree = () => {
+    setConsentAgreed(true);
+    setShowConsent(false);
   };
 
   return (
@@ -52,20 +58,37 @@ export default function WelcomePage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-12 max-w-xs w-full"
         >
-          <button
-            onClick={() => setShowConsent(true)}
-            className="w-full text-left p-5 bg-white rounded-2xl shadow-sm border border-primary-100 hover:shadow-md transition-all"
-          >
-            <p className="text-sm text-warm-600 leading-relaxed">
-              在开始之前，请先了解我们的服务说明和隐私政策
-            </p>
-            <div className="flex items-center justify-between mt-3">
-              <span className="text-xs text-warm-400">约1分钟阅读</span>
-              <span className="text-primary-600 text-sm font-medium">
-                了解详情 →
-              </span>
+          {consentAgreed ? (
+            <div className="w-full p-5 bg-green-50 rounded-2xl border border-green-200">
+              <div className="flex items-center gap-3">
+                <span className="text-xl">✓</span>
+                <div>
+                  <p className="text-sm text-green-700 font-medium">已同意服务说明</p>
+                  <button
+                    onClick={() => setShowConsent(true)}
+                    className="text-xs text-green-600 mt-1 hover:text-green-700"
+                  >
+                    查看详情
+                  </button>
+                </div>
+              </div>
             </div>
-          </button>
+          ) : (
+            <button
+              onClick={() => setShowConsent(true)}
+              className="w-full text-left p-5 bg-white rounded-2xl shadow-sm border border-primary-100 hover:shadow-md transition-all"
+            >
+              <p className="text-sm text-warm-600 leading-relaxed">
+                在开始之前，请先了解我们的服务说明和隐私政策
+              </p>
+              <div className="flex items-center justify-between mt-3">
+                <span className="text-xs text-warm-400">约1分钟阅读</span>
+                <span className="text-primary-600 text-sm font-medium">
+                  了解详情 →
+                </span>
+              </div>
+            </button>
+          )}
         </motion.div>
       </header>
 
@@ -159,7 +182,7 @@ export default function WelcomePage() {
           <ConsentModal
             isOpen={showConsent}
             onClose={() => setShowConsent(false)}
-            onAgree={() => {}}
+            onAgree={handleConsentAgree}
           />
         )}
       </AnimatePresence>
